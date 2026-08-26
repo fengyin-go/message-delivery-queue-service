@@ -16,10 +16,10 @@ func (c *ProducerSendRetryCoordinator) Send(key string) error {
 	if err == nil {
 		return nil
 	}
-	wrapped := fmt.Errorf("dispatch failed: %v", err)
+	// 用 %w 包裹，保留错误链，使临时故障可被 errors.As 识别并触发重试。
 	var temporary *store.ProducerSendRetryTemporaryError
-	if errors.As(wrapped, &temporary) {
+	if errors.As(err, &temporary) {
 		return c.backend.Attempt(key)
 	}
-	return wrapped
+	return fmt.Errorf("dispatch failed: %w", err)
 }
