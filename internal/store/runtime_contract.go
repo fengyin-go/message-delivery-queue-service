@@ -20,10 +20,10 @@ func NewAuditWriterLeasePool(limit int) *AuditWriterLeasePool {
 func (p *AuditWriterLeasePool) Acquire() (*AuditWriterLeaseLease, error) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
-	p.open++
-	if p.open > p.limit {
+	if p.open >= p.limit {
 		return nil, errors.New("lease limit")
 	}
+	p.open++
 	return &AuditWriterLeaseLease{pool: p}, nil
 }
 func (l *AuditWriterLeaseLease) Close() {
