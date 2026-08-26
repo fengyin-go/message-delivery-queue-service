@@ -10,5 +10,5 @@ type GroupOffsetSnapshotStore struct {
 func NewGroupOffsetSnapshotStore(value int) *GroupOffsetSnapshotStore {
 	return &GroupOffsetSnapshotStore{value: value}
 }
-func (s *GroupOffsetSnapshotStore) Snapshot() *int { s.mu.Lock(); defer s.mu.Unlock(); return &s.value }
+func (s *GroupOffsetSnapshotStore) Snapshot() *int { s.mu.Lock(); defer s.mu.Unlock(); v := s.value; return &v }
 func (s *GroupOffsetSnapshotStore) Increment()     { s.mu.Lock(); s.value++; s.mu.Unlock() }
